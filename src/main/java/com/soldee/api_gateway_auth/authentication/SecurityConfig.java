@@ -49,7 +49,7 @@ public class SecurityConfig {
     private void x509Config(X509Configurer<HttpSecurity> x509Configurer) {
         x509Configurer
                 .x509PrincipalExtractor(this::extractCN)
-                .userDetailsService(this::authenticateUser);
+                .userDetailsService(username -> new User(username, "", AuthorityUtils.NO_AUTHORITIES));
     }
 
 

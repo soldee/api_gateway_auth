@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
+
 @RestController
 @RequestMapping("/v1")
 public class JwtController {
@@ -21,9 +23,9 @@ public class JwtController {
             value = "/auth",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<JwtResponse> generateJwt(@RequestParam String clientName) throws Exception {
+    public ResponseEntity<JwtResponse> generateJwt(Principal principal) throws Exception {
         return ResponseEntity.ok(
-                new JwtResponse(jwtProviderService.provideJwt(clientName))
+                new JwtResponse(jwtProviderService.provideJwt(principal.getName()))
         );
     }
 }
