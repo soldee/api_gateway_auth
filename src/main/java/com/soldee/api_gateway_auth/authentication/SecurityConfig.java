@@ -75,6 +75,8 @@ public class SecurityConfig {
 
 
     private User authenticateUser(String username) {
+        log.debug("Authenticating user: " + username);
+
         if (username.equals("bob")) {
             return new User(username, "", AuthorityUtils.commaSeparatedStringToAuthorityList("admin"));
         }
