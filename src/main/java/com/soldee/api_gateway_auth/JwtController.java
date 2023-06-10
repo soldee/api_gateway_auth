@@ -2,6 +2,7 @@ package com.soldee.api_gateway_auth;
 import com.soldee.api_gateway_auth.response.JwtResponse;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,9 +24,9 @@ public class JwtController {
             value = "/auth",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<JwtResponse> generateJwt(Principal principal) throws Exception {
+    public ResponseEntity<JwtResponse> generateJwt(Authentication authentication) throws Exception {
         return ResponseEntity.ok(
-                new JwtResponse(jwtProviderService.provideJwt(principal.getName()))
+                new JwtResponse(jwtProviderService.provideJwt(authentication.getName()))
         );
     }
 }

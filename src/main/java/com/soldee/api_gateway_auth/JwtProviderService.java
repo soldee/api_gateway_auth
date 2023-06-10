@@ -21,7 +21,7 @@ public class JwtProviderService {
 
     public String provideJwt(String clientName) throws InvalidProviderException, EmptyRolesException {
 
-        ClientDto client = authorizationService.containsClient(clientName)
+        ClientDto client = authorizationService.getClient(clientName)
                 .orElseThrow(InvalidProviderException::new);
 
         if (client.getRoles().isEmpty()) throw new EmptyRolesException();
