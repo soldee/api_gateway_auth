@@ -17,9 +17,8 @@ public class InMemoryAuthorizationService implements AuthorizationService {
     private List<GrantedAuthority> roles;
     Logger log = LoggerFactory.getLogger(InMemoryAuthorizationService.class);
 
-    public InMemoryAuthorizationService() {
-        initRoles();
-        initClients();
+    public InMemoryAuthorizationService(List<ClientDto> clients) {
+        this.clients = clients;
     }
 
     private void initClients() {
@@ -34,7 +33,6 @@ public class InMemoryAuthorizationService implements AuthorizationService {
             clientDto.setRoles(
                     clientDto.getRoles().stream()
                             .filter(role -> {
-                                System.out.println(role);
                                 boolean isValidRole = roles.contains(role);
                                 if (!isValidRole) log.warn("Invalid role \"" + role + "\"");
                                 return isValidRole;
