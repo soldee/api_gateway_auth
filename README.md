@@ -2,6 +2,8 @@
 
 Add an extra layer of security for INTRANET apps to authenticate and consume a service hosted behind an api gateway that uses this service to authenticate its clients. It does so by generating JWTs after successful x509 authentication
 
+
+## TODO
 - afegir opcio de proporcionar sessionID o JWT.
   - Si s'utilitza JWT 
     - els rols del user autenticat son visibles
@@ -20,4 +22,16 @@ Add an extra layer of security for INTRANET apps to authenticate and consume a s
 
 - per a manejar la auth al userDetailsService
   - podem Utilitzar la implementació de AuthorizationService per a autenticar l'usuari i obtenir els rols
-  - després podem passar el username i rols al controller per a que generi el JWT
+  - després podem passar el username i rols al controller per a que generi el JWT~~~~
+
+<br><br>
+
+# TLS configuration
+
+- The application performs TLS mutual authentication
+- The client that wishes to be authenticated must present a valid certificate trusted by the server
+- The server then performs checks if the CN present in the client certificate is known by the server
+
+To accomplish this we need to generate a root certificate that will be trusted by the applications that need to be authenticated. The root CA will sign both the client cert and the server cert. The CN specified in the client cert must be registered as a valid CN by the server.
+
+The steps are detailed [here](docs/tls_configuration.md)
