@@ -1,33 +1,43 @@
 package com.soldee.api_gateway_auth.authorization;
+import com.soldee.api_gateway_auth.config.ConfigFileDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Condition;
+import org.springframework.context.annotation.ConditionContext;
+import org.springframework.core.type.AnnotatedTypeMetadata;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 
-@Service
+
 public class InMemoryAuthorizationService implements AuthorizationService {
 
     private List<ClientDto> clients;
-    private List<GrantedAuthority> roles;
+    private List<String> roles;
     Logger log = LoggerFactory.getLogger(InMemoryAuthorizationService.class);
 
-    public InMemoryAuthorizationService(List<ClientDto> clients) {
-        this.clients = clients;
+    private final ConfigFileDto configurationFile;
+
+    public InMemoryAuthorizationService(ConfigFileDto configurationFile) {
+        this.configurationFile = configurationFile;
     }
 
+
     private void initClients() {
-        List<ClientDto> fetchedClients = Arrays.asList(
+        /*List<ClientDto> fetchedClients = Arrays.asList(
                 new ClientDto(1, "bob", Arrays.asList(new SimpleGrantedAuthority("insert_user"))),
                 new ClientDto(2, "APP2", Arrays.asList(new SimpleGrantedAuthority("admin"))),
                 new ClientDto(3, "APP3", Arrays.asList(new SimpleGrantedAuthority("insert_user"), new SimpleGrantedAuthority("read_user"))),
                 new ClientDto(4, "APP4", Arrays.asList(new SimpleGrantedAuthority("invalid user role")))
-        );
+        );*/
+        List<ClientDto> fetchedClients = configurationFile.getConfigFileAuthDto().getRoles();
 
         this.clients = fetchedClients.stream().filter(clientDto -> {
             clientDto.setRoles(
@@ -49,11 +59,7 @@ public class InMemoryAuthorizationService implements AuthorizationService {
 
 
     private void initRoles() {
-        this.roles = Arrays.asList(
-                new SimpleGrantedAuthority("admin"),
-                new SimpleGrantedAuthority("read_user"),
-                new SimpleGrantedAuthority("insert_user")
-        );
+        this.roles = Arrays.asList("admin","read","insert");
     }
 
     public void refreshClients() {

@@ -6,4 +6,8 @@ public class ConfigFileJwtDto {
 
     @JsonProperty("contains_role")
     boolean containsRole;
+
+    public boolean isContainsRole() {
+        return containsRole;
+    }
 }

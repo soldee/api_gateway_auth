@@ -7,8 +7,10 @@ import com.soldee.api_gateway_auth.authorization.InMemoryAuthorizationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.security.core.GrantedAuthority;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,7 +20,7 @@ public class AuthorizationConfigurer {
 
     Logger log = LoggerFactory.getLogger(AuthorizationConfigurer.class);
     ResourceLoader resourceLoader;
-    private ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
 
     public AuthorizationConfigurer(ResourceLoader resourceLoader, ObjectMapper objectMapper) {
@@ -29,14 +31,15 @@ public class AuthorizationConfigurer {
 
     private InputStream getConfigFile() {
         try {
-            return resourceLoader.getResource("").getInputStream();
+            return resourceLoader.getResource("classpath:auth_config.json").getInputStream();
         } catch (IOException e) {
             log.error("Failed to read config file");
             throw new RuntimeException(e);
         }
     }
 
-    private ConfigFileDto parseConfigFile() {
+    @Bean
+    public ConfigFileDto configurationFile() {
         try {
             return objectMapper.readValue(getConfigFile(), ConfigFileDto.class);
         } catch (IOException e) {
@@ -45,14 +48,15 @@ public class AuthorizationConfigurer {
         }
     }
 
-
     @Bean
     public AuthorizationService authorizationService() {
-        ConfigFileDto configFile = parseConfigFile();
-
-        if (configFile.configFileAuthDto.inMemory) {
-            return new InMemoryAuthorizationService(configFile.configFileAuthDto.roles);
+        ConfigFileDto configFile = configurationFile();
+        if (configFile.getConfigFileAuthDto().isInMemory()) {
+            InMemoryAuthorizationService authService = new InMemoryAuthorizationService(configFile);
+            authService.refreshClients();
+            return authService;
         }
-        return new DBAuthorizationService();
+        return new DBAuthorizationService(configFile);
     }
+
 }

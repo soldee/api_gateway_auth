@@ -28,7 +28,7 @@ public class JwtProviderService {
 
         return jwtUtils.generateToken(
                 client.getName(),
-                client.getRoles().stream().map(GrantedAuthority::getAuthority).toArray(String[]::new)
+                client.getRoles().toArray(new String[0])
         );
     }
 }

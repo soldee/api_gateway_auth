@@ -11,4 +11,11 @@ public class ConfigFileDto {
     @JsonProperty("jwt")
     ConfigFileJwtDto configFileJwtDto;
 
+    public ConfigFileAuthDto getConfigFileAuthDto() {
+        return configFileAuthDto;
+    }
+
+    public ConfigFileJwtDto getConfigFileJwtDto() {
+        return configFileJwtDto;
+    }
 }

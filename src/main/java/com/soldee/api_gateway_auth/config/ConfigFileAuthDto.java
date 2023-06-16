@@ -13,4 +13,12 @@ public class ConfigFileAuthDto {
     boolean inMemory;
     @JsonProperty
     List<ClientDto> roles;
+
+    public List<ClientDto> getRoles() {
+        return roles;
+    }
+
+    public boolean isInMemory() {
+        return inMemory;
+    }
 }
