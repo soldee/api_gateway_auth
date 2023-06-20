@@ -44,7 +44,7 @@ openssl req -new -newkey rsa:4096 -nodes -keyout clientBob.key -out clientBob.cs
 
 2. Sign the CSR with the root CA
 ```shell
-openssl x509 -req -CA rootCA.crt -CAkey rootCA.key -in clientBob.csr -out clientBob.crt -days 365 -CAcreateserial```
+openssl x509 -req -CA rootCA.crt -CAkey rootCA.key -in clientBob.csr -out clientBob.crt -days 365 -CAcreateserial
 ```
 
 3. Use PKCS 12 archive to package our server's private key together with the signed certificate
