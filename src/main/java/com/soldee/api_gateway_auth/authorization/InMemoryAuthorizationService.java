@@ -2,17 +2,10 @@ package com.soldee.api_gateway_auth.authorization;
 import com.soldee.api_gateway_auth.config.ConfigFileDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.annotation.Condition;
-import org.springframework.context.annotation.ConditionContext;
-import org.springframework.core.type.AnnotatedTypeMetadata;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -34,12 +27,6 @@ public class InMemoryAuthorizationService implements AuthorizationService {
 
 
     private void initClients() {
-        /*List<ClientDto> fetchedClients = Arrays.asList(
-                new ClientDto(1, "bob", Arrays.asList(new SimpleGrantedAuthority("insert_user"))),
-                new ClientDto(2, "APP2", Arrays.asList(new SimpleGrantedAuthority("admin"))),
-                new ClientDto(3, "APP3", Arrays.asList(new SimpleGrantedAuthority("insert_user"), new SimpleGrantedAuthority("read_user"))),
-                new ClientDto(4, "APP4", Arrays.asList(new SimpleGrantedAuthority("invalid user role")))
-        );*/
         List<ClientDto> fetchedClients = configurationFile.getAuth().getUsers();
 
         this.clients = fetchedClients.stream().filter(clientDto -> {
