@@ -37,3 +37,15 @@ Add an extra layer of security for INTRANET apps to authenticate and consume a s
 To accomplish this we need to generate a root certificate that will be trusted by the applications that need to be authenticated. The root CA will sign both the client cert and the server cert. The CN specified in the client cert must be registered as a valid CN by the server.
 
 The steps are detailed [here](docs/tls_configuration.md)
+
+<br><br>
+
+## DB setup
+- set up mysql
+```shell
+docker run --rm --network api_gw-network --name mysql -e MYSQL_ROOT_PASSWORD=root -d mysql:8.0.33
+```
+- connecting to the db
+```sh
+docker run -it --network api_gw-network --rm mysql mysql -hmysql -uroot -p
+```
