@@ -1,0 +1,35 @@
+logging:
+   level:
+      org:
+         springframework:
+            web: INFO
+server:
+   port: 8080
+   ssl:
+      key-store: classpath:tls/keystore.jks
+      key-store-password: changeit
+      trust-store: classpath:tls/truststore.jks
+      trust-store-password: changeit
+      client-auth: need
+auth:
+   in-memory: true
+   users:
+      -
+         name: bob
+         roles:
+            - INSERT
+      -
+         name: APP1
+         roles:
+            - ADMIN
+      -
+         name: APP2
+         roles:
+            - INSERT
+            - READ
+      -
+         name: APP3
+         roles:
+            - ADMIN
+jwt:
+   contains-role: true

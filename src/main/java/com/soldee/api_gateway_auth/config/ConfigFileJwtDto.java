@@ -1,13 +1,13 @@
 package com.soldee.api_gateway_auth.config;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 
+@Configuration
+@ConfigurationProperties("jwt")
+@Data
 public class ConfigFileJwtDto {
 
-    @JsonProperty("contains_role")
     boolean containsRole;
-
-    public boolean isContainsRole() {
-        return containsRole;
-    }
 }

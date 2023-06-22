@@ -3,6 +3,7 @@ import com.soldee.api_gateway_auth.config.ConfigFileDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Condition;
 import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.type.AnnotatedTypeMetadata;
@@ -16,7 +17,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 
-
+@Service
+@ConditionalOnProperty(prefix = "auth", name = "in-memory", havingValue = "true")
 public class InMemoryAuthorizationService implements AuthorizationService {
 
     private List<ClientDto> clients;
@@ -27,6 +29,7 @@ public class InMemoryAuthorizationService implements AuthorizationService {
 
     public InMemoryAuthorizationService(ConfigFileDto configurationFile) {
         this.configurationFile = configurationFile;
+        refreshClients();
     }
 
 
@@ -37,7 +40,7 @@ public class InMemoryAuthorizationService implements AuthorizationService {
                 new ClientDto(3, "APP3", Arrays.asList(new SimpleGrantedAuthority("insert_user"), new SimpleGrantedAuthority("read_user"))),
                 new ClientDto(4, "APP4", Arrays.asList(new SimpleGrantedAuthority("invalid user role")))
         );*/
-        List<ClientDto> fetchedClients = configurationFile.getConfigFileAuthDto().getRoles();
+        List<ClientDto> fetchedClients = configurationFile.getAuth().getUsers();
 
         this.clients = fetchedClients.stream().filter(clientDto -> {
             clientDto.setRoles(
@@ -59,7 +62,7 @@ public class InMemoryAuthorizationService implements AuthorizationService {
 
 
     private void initRoles() {
-        this.roles = Arrays.asList("admin","read","insert");
+        this.roles = Arrays.asList("ADMIN","READ","INSERT");
     }
 
     public void refreshClients() {
