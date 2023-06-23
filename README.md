@@ -49,3 +49,36 @@ docker run --rm --network api_gw-network --name mysql -e MYSQL_ROOT_PASSWORD=roo
 ```sh
 docker run -it --network api_gw-network --rm mysql mysql -hmysql -uroot -p
 ```
+<br>
+
+TABLE Clients: id PK, name
+
+TABLE Roles: role PK
+
+TABLE Client_roles: id PK FK, role PK FK
+
+<br>
+
+CREATE TABLE clients(
+  id INT, 
+  name VARCHAR(10) NOT NULL,
+  PRIMARY KEY(id)
+);
+
+CREATE TABLE roles(
+  role VARCHAR(10),
+  PRIMARY KEY(role)
+);
+
+CREATE TABLE client_roles(
+  client_id INT,
+  role VARCHAR(10),
+  PRIMARY KEY(client_id, role),
+  FOREIGN KEY (client_id) REFERENCES clients(id),
+  FOREIGN KEY (role) REFERENCES roles(role)
+);
+
+<br>
+
+select clients.name,client_roles.role from clients inner join client_roles on clients.id=client_roles.client_id and clients.name='${name}';
+
