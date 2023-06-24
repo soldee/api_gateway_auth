@@ -5,10 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -16,7 +14,6 @@ import java.util.stream.Collectors;
 public class InMemoryAuthorizationService implements AuthorizationService {
 
     private List<Client> clients;
-    private List<String> roles;
     Logger log = LoggerFactory.getLogger(InMemoryAuthorizationService.class);
 
     private final ConfigFileDto configurationFile;
@@ -28,33 +25,10 @@ public class InMemoryAuthorizationService implements AuthorizationService {
 
 
     private void initClients() {
-        List<Client> fetchedClients = configurationFile.getAuth().getUsers();
-
-        this.clients = fetchedClients.stream().filter(clientDto -> {
-            clientDto.setRoles(
-                    clientDto.getRoles().stream()
-                            .filter(role -> {
-                                boolean isValidRole = roles.contains(role);
-                                if (!isValidRole) log.warn("Invalid role \"" + role + "\"");
-                                return isValidRole;
-                            })
-                            .collect(Collectors.toList())
-            );
-
-            boolean hasEmptyRoles = clientDto.getRoles().isEmpty();
-            if (hasEmptyRoles) log.error("\"" + clientDto.getName() + "\" has no valid roles");
-            return !hasEmptyRoles;
-
-        }).collect(Collectors.toList());
-    }
-
-
-    private void initRoles() {
-        this.roles = Arrays.asList("ADMIN","READ","INSERT");
+        this.clients = configurationFile.getAuth().getUsers();
     }
 
     public void refreshClients() {
-        initRoles();
         initClients();
     }
 
