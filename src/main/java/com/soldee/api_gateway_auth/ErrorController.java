@@ -1,5 +1,6 @@
 package com.soldee.api_gateway_auth;
 
+import com.soldee.api_gateway_auth.exceptions.ApiException;
 import com.soldee.api_gateway_auth.exceptions.EmptyRolesException;
 import com.soldee.api_gateway_auth.response.ErrorResponse;
 import com.soldee.api_gateway_auth.exceptions.InvalidProviderException;
@@ -18,7 +19,7 @@ public class ErrorController {
 
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ExceptionHandler({EmptyRolesException.class, InvalidProviderException.class})
+    @ExceptionHandler({ ApiException.class })
     @ResponseBody
     public ErrorResponse handleBadRequest(HttpServletRequest request, Exception error) {
         log.error(request.getRemoteAddr() + " - " + request.getRequestURI() + " - " + error.getLocalizedMessage());
@@ -28,7 +29,7 @@ public class ErrorController {
 
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    @ExceptionHandler({Exception.class})
+    @ExceptionHandler({ Exception.class })
     @ResponseBody
     public GeneralErrorResponse fallbackErrorHandler(HttpServletRequest request, Exception error) {
         log.error(request.getRequestURI() + " - " + error.getLocalizedMessage());
