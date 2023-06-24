@@ -17,14 +17,28 @@ Add an extra layer of security for INTRANET apps to authenticate and consume a s
     - més adient per a autenticar external users ja que no exposem rols
   - També podem utilitzar JWT i fer el fetch dels rols a la BBDD enlloc d'utilitzar sessionID
 
-- afegir opcio de utilitzar in-memory users o DB users
-  - per a autenticar poques aplicacions d'una intranet podem utilitzar in-memory users llegint un JSON amb tots els users i rols
-  - en canvi, si el servei es vol utilitzar amb molts usuaris, tindrem els usuaris en un BBDD
-  - per a fer-ho podem proporcionar dos implementacions de AuthorizationService
-
 - per a manejar la auth al userDetailsService
   - podem Utilitzar la implementació de AuthorizationService per a autenticar l'usuari i obtenir els rols
   - després podem passar el username i rols al controller per a que generi el JWT~~~~
+
+- admin controller
+  - to create new users and manage their roles
+  - to create new roles and activate/deactivate roles (add active property to roles table)
+
+- automatic JWT secret regeneration
+  - if nginx is performing jwt validation then we need to inform nginx of the new JWT secret
+  - nginx needs to be able to perform jwt validation based on two simultaneously valid secrets
+  - another option would be to have clients reauthenticate to obtain a new x509 when a new secret is generated 
+    - take into account that this will introduce peaks of clients trying to authenticate when a secret is invalidated (performance might decrease)
+  
+- docker 
+  - mysql
+    - Dockerfile 
+    - configuration file
+    - script to generate db/tables, insert dummy data and generate dummy certificates
+  - nginx config
+    - configuration file
+
 
 <br><br>
 
