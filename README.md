@@ -1,4 +1,4 @@
-# API GATEWAY Authentication
+_# API GATEWAY Authentication
 
 Add an extra layer of security for INTRANET apps to authenticate and consume a service hosted behind an api gateway that uses this service to authenticate its clients. It does so by generating JWTs after successful x509 authentication.
 
@@ -80,5 +80,4 @@ CREATE TABLE client_roles(
 
 <br>
 
-select clients.name,client_roles.role from clients inner join client_roles on clients.id=client_roles.client_id and clients.name='${name}';
-
+SELECT clients.name,client_roles.role FROM clients INNER JOIN client_roles ON clients.id=client_roles.client_id WHERE clients.name =?

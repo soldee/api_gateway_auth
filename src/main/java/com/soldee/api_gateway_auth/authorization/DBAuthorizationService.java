@@ -1,8 +1,6 @@
 package com.soldee.api_gateway_auth.authorization;
 
-import com.soldee.api_gateway_auth.authorization.repository.ClientDto;
 import com.soldee.api_gateway_auth.authorization.repository.ClientRepository;
-import com.soldee.api_gateway_auth.authorization.repository.RoleDto;
 import com.soldee.api_gateway_auth.config.Client;
 import com.soldee.api_gateway_auth.config.ConfigFileDto;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -26,19 +24,17 @@ public class DBAuthorizationService implements AuthorizationService {
 
     @Override
     public Optional<Client> getClient(String name) {
-        List<ClientDto> clients = clientRepository.findClientWithRolesByName(name);
 
-        List<String> roles = clients.stream()
-                //.map(ClientDto::getRoles)
-                .flatMap(clientDto -> clientDto.getRoles().stream())
-                .map(roleDto -> roleDto.getRole())
-                .collect(Collectors.toList());
+        Set<ClientRepository.ClientResult> clients = clientRepository.findClientWithRolesByName(name);
 
-        Client client = new Client();
-        client.setRoles(roles);
-        client.setName(clients.get(0).getName());
+        if (clients.isEmpty()) return Optional.empty();
 
-        return Optional.of(client);
+        return Optional.of(
+                new Client(
+                        clients.iterator().next().getName(),
+                        clients.stream().map(ClientRepository.ClientResult::getRole).collect(Collectors.toSet())
+                )
+        );
     }
 
 }
