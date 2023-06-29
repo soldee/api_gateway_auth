@@ -10,11 +10,13 @@ Add an extra layer of security for INTRANET apps to authenticate and consume a s
   - Si s'utilitza JWT 
     - els rols del user autenticat son visibles
     - és més ràpid ja que només es valida el JWT i no s'han de fer queries a la BD per a autenticar
+    - JWT validation performed at nginx (faster)
   - Si s'utilitza sessionID
     - es fa un fetch dels rols del user per cada request
     - es fa un fetch del sessionID a la BD per cada request
     - possibles CSRF ?
     - més adient per a autenticar external users ja que no exposem rols
+    - JWT validation performed in api_gateway_auth (slower)
   - També podem utilitzar JWT i fer el fetch dels rols a la BBDD enlloc d'utilitzar sessionID
 
 - per a manejar la auth al userDetailsService
@@ -28,7 +30,7 @@ Add an extra layer of security for INTRANET apps to authenticate and consume a s
 - automatic JWT secret regeneration
   - if nginx is performing jwt validation then we need to inform nginx of the new JWT secret
   - nginx needs to be able to perform jwt validation based on two simultaneously valid secrets
-  - another option would be to have clients reauthenticate to obtain a new x509 when a new secret is generated 
+  - another option would be to have clients reauthenticate to obtain a new jwt when a new secret is generated 
     - take into account that this will introduce peaks of clients trying to authenticate when a secret is invalidated (performance might decrease)
   
 - docker 
